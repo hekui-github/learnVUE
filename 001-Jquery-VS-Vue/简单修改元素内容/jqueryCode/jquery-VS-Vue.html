@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<style type="text/css">
+	#name {
+		color: red;
+	}
+	#libName {
+		color:red;
+	}
+</style>
+<p>Hello, <span id="name" >美女</span>!</p>
+<p>欢迎学习 <span id="libName">Angular</span>.</p>
+<button id = "modifyBtn">修改</button>
+<script src="https://unpkg.com/jquery"></script>
+<script type="text/javascript">
+	$("#modifyBtn").click(function(){
+		$("#name").text("帅哥");
+		$("#libName").text("Vue");
+	});
+</script>
+
+</body>
+</html>

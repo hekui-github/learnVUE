@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			color: #666;
+		}
+		ul{ list-style: none; }
+		#cart{
+			width: 938px;
+			margin: 20px auto;
+		}
+		#cart_header{ 
+			font-weight: bold;
+			font-size: 16px;
+			background-color: #e2f2ff;
+			height: 33px; 
+			line-height: 30px;
+		 }
+		#cart_header ul{
+			overflow: hidden;
+			border-top: 3px solid #a7cbff;
+			border-bottom: 1px solid #a7cbff;
+			border-left: 1px solid #a7cbff;
+		}
+		#cart_header li{
+			float: left;
+			text-align: center;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_header li.list_check{
+			width: 80px;
+		}
+		#cart_header li.list_good{
+			width: 320px;
+		}
+		#cart_header li.list_price{
+			width: 150px;
+		}
+		#cart_header li.list_count{
+			width: 110px;
+		}
+		#cart_header li.list_subTotal{
+			width: 170px;
+		}
+		#cart_header li.list_act{
+			width: 100px;
+		}
+		#cart_item{}
+		#cart_item .item_i{
+			text-align: center;
+			border-bottom: 1px solid #a7cbff;
+			border-left: 1px solid #a7cbff;
+			overflow: hidden;
+		}
+		#cart_item .checkbox{
+			/*display: inline-block;*/
+			float: left;
+			width: 80px;
+			height: 60px;
+			text-align: center;
+			padding-top: 40px;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .good{
+			/*display: inline-block;*/
+			float: left;
+			width: 320px;
+			height: 100px;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .good img{
+			width: 100px;
+			height: 80px;
+			float: left;
+			margin: 10px 10px;
+		}
+		#cart_item .good span{
+			float: left;
+			padding-top: 30px;
+		}
+		#cart_item .price{
+			width: 150px;
+			height: 60px;
+			padding-top: 40px;
+			float: left;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .count{
+			padding: 40px 0 0 10px;
+			border-right: 1px solid #CADEFF;
+			float: left;
+			width: 100px;
+			height: 60px;
+		}
+		#cart_item .count .count_input{
+			width: 50px;
+			height: 15px;
+			float: left;
+			text-align: center;
+			padding: 4px 0;
+			border: 1px solid #aaa;
+		}
+		#cart_item .count .reduce,#cart_item .count .add{
+			display: inline-block;
+			width: 17px;
+			height: 23px;
+			float: left;
+			background-color: #e5e5e5;
+			border: 1px solid #e5e5e5;
+			cursor: pointer;
+		}
+		#cart_item .subTotal{
+			padding-top: 40px; 
+			float: left;
+			width: 170px;
+			height: 60px;
+			color: red;
+			font-weight: bold;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .act{
+			float: left;
+			width: 100px;
+			height: 60px;
+			padding-top: 40px;
+			border-right: 1px solid #CADEFF;
+			cursor: pointer;
+		}
+		#cart_footer{
+			width: 935px;
+			height: 48px;
+			background-color: #eaeaea;
+			margin-top: 10px;
+			border: 1px solid #c8c8c8;
+			line-height: 48px;
+			position: relative;
+		}
+		#cart_footer .checkAll{
+			display: inline-block;
+			margin:0 10px;
+		}
+		#deleteAll{
+			display: inline-block;
+			margin-left: 40px;
+			cursor: pointer;
+		}
+		#selected{
+			float: right;
+			margin-right: 150px;
+			cursor: pointer;
+		}
+		#cart_footer .total{
+			float: right;
+			margin-right: 100px;
+		}
+		#totalCount,#totalPrice{
+			font-weight: bold;
+			color: red;
+		}
+		#cart_footer .closing{
+			float: right;
+			display: block;
+			width: 100px;
+			border-left: 1px solid #c8c8c8; 
+			text-align: center;
+			color: #000;
+			font-weight: bold;	
+		}
+		
+	</style>
+	<script src="https://unpkg.com/jquery"></script>
+
+	<script type="text/javascript">
+		window.onload = function(){
+			var item_i = document.getElementsByClassName('item_i');
+			var totalCount = document.getElementById('totalCount');
+			var totalPrice =document.getElementById('totalPrice');
+			var checkAll = document.getElementsByClassName('checkAll check');
+			var check = document.getElementsByClassName('check');
+			var deleteAll = document.getElementById('deleteAll');
+			var selected = document.getElementById('selected');
+			var cart_footer = document.getElementById('cart_footer');
+
+			//每一商品行小计
+			function getSubTotal(item){
+				var count_input = parseInt($(item).find(".count_input").eq(0).val());
+				var price = parseFloat($(item).find(".price").eq(0).text()).toFixed(2);
+				$(item).find('subTotal').eq(0).html((count_input*price).toFixed(2));
+			}
+
+			// //商品列表事件委托
+			// for( var i = 0; i < item_i.length; i++){
+			// 	item_i[i].onclick = function (event){
+			// 		var event = event || window.event;
+			// 		var target = event.target || event.srcElement;
+			// 		var count_input = this.getElementsByClassName('count_input')[0];
+			// 		var val = parseInt(count_input.value);
+			// 		switch(target.className){
+			// 			case 'add':
+			// 				count_input.value = val+1;
+			// 				getSubTotal(this)
+			// 				break;
+			// 			case 'reduce':
+			// 				count_input.value = val-1;
+			// 				if(count_input.value <=1){
+			// 					count_input.value = 1;
+			// 				}
+			// 				getSubTotal(this)
+			// 				break;
+			// 			case 'delete':
+			// 				var conf = confirm('确认删除商品吗？');
+			// 				if(conf){
+			// 					this.parentNode.removeChild(this);
+			// 				}
+			// 				break;
+			// 			default:
+			// 				break;
+			// 		}
+			// 	getTotal()
+			// 	}
+			// }
+
+			//总计
+			function getTotal(){
+				var tCount = 0;
+				var tPrice = 0;
+				for( var i = 0; i < item_i.length; i++){
+				 	var itemCheck = $(item_i[i]).find(".check").get(0);
+				 	if(itemCheck.checked){
+				 		listCount = parseInt($(item_i[i]).find(".count_input").eq(0).val());
+				 		listPrice = parseFloat($(item_i[i]).find(".subTotal").eq(0).text());
+				 		tCount += listCount;
+				 		tPrice += listCount * listPrice;
+				}
+				$(totalPrice).html(tPrice.toFixed(2));
+				$(totalCount).html(tCount);
+			}
+
+			// //选择框逻辑
+			// for( var i = 0; i <check.length; i++){
+			// 	check[i].onclick = function(event){
+			// 		var event = event || window.event;
+			// 		var target = event.target || event.srcElement;
+			// 		if( target.className === 'checkAll check'){
+			// 			for( var j = 0; j < check.length; j++){
+			// 				check[j].checked = this.checked;
+			// 			}
+			// 		}
+			// 		//使用check[i]会造成闭包
+			// 		if( !this.checked){
+			// 			for( var k = 0; k < checkAll.length; k++){
+			// 				checkAll[k].checked = false;
+			// 			}
+			// 		}
+			// 		getTotal()
+			// 	}
+			// }
+
+			// //删除全部
+			// deleteAll.onclick = function(){
+			// 	var conf = confirm('确定删除全部商品吗？');
+			// 	for( var i = 0; i < item_i.length; i++){
+			// 		if( conf ){
+			// 			item_i[i].parentNode.removeChild(item_i[i]);
+			// 			}
+			// 		i--;
+			// 	}
+			// }
+			// //已选商品显示
+			// selected.onclick = function(){
+			// 	cart_footer.className = cart_footer.className == "show" ? '':'show';
+			// }
+			
+
+			// checkAll[0].checked = true;
+			// checkAll[0].onclick();
+			// getTotal()
+		}
+	</script>
+</head>
+<body>
+	<div id="cart">
+		<div id="cart_header">
+			<ul>
+				<li class="list_check">
+					<input type="checkbox" class="checkAll check" checked="checked"/>
+					<label>全选</label>
+				</li>
+				<li class="list_good">商品</li>
+				<li class="list_price">单价</li>
+				<li class="list_count">数量</li>
+				<li class="list_subTotal">小计</li>
+				<li class="list_act">操作</li>
+			</ul>
+		</div>
+		<div id="cart_item">
+			<div class="item_i">
+				<div class="checkbox">
+					<input type="checkbox" class="checkOne check" checked="checked">
+				</div>
+				<div class="good">
+					<img src=" 1.jpg">
+					<span>Casio/卡西欧 EX-TR350</span>
+				</div>
+				<div class="price">5999.88</div>
+				<div class="count">
+					<span class="reduce">-</span>
+					<input type="text" class="count_input" value="1">
+					<span class="add">+</span>
+				</div>
+				<div class="subTotal">
+					5999.88
+				</div>
+				<div class="act">
+					<span class="delete">删除</span>
+				</div>
+			</div>
+			<div class="item_i">
+				<div class="checkbox">
+					<input type="checkbox" class="checkOne check" checked="checked">
+				</div>
+				<div class="good">
+					<img src=" 2.jpg">
+					<span>Casio/卡西欧 EX-TR350</span>
+				</div>
+				<div class="price">7842.88</div>
+				<div class="count">
+					<span class="reduce">-</span>
+					<input type="text" class="count_input" value="1">
+					<span class="add">+</span>
+				</div>
+				<div class="subTotal">
+					7842.88
+				</div>
+				<div class="act">
+					<span class="delete">删除</span>
+				</div>
+			</div>
+			<div class="item_i">
+				<div class="checkbox">
+					<input type="checkbox" class="checkOne check" checked="checked">
+				</div>
+				<div class="good">
+					<img src=" 3.jpg">
+					<span>Casio/卡西欧 EX-TR350</span>
+				</div>
+				<div class="price">6001.88</div>
+				<div class="count">
+					<span class="reduce">-</span>
+					<input type="text" class="count_input" value="1">
+					<span class="add">+</span>
+				</div>
+				<div class="subTotal">
+					6001.88
+				</div>
+				<div class="act">
+					<span class="delete">删除</span>
+				</div>
+			</div>
+			<div class="item_i">
+				<div class="checkbox">
+					<input type="checkbox" class="checkOne check" checked="checked">
+				</div>
+				<div class="good">
+					<img src=" 4.jpg">
+					<span>Casio/卡西欧 EX-TR350</span>
+				</div>
+				<div class="price">2321.18</div>
+				<div class="count">
+					<span class="reduce">-</span>
+					<input type="text" class="count_input" value="1">
+					<span class="add">+</span>
+				</div>
+				<div class="subTotal">
+					2321.18
+				</div>
+				<div class="act">
+					<span class="delete">删除</span>
+				</div>
+			</div>
+		</div>
+		<div id="cart_footer" class="">
+			<label><input type="checkbox" class="checkAll check" checked="checked">全选</label>
+			<span id="deleteAll">删除</span>
+			<span class="closing">结算</span>
+			<div class="total">
+				 合计：￥<span id="totalPrice">11</span>
+			</div>
+			<div id="selected">
+				已选商品&nbsp;<span id="totalCount">1</span>&nbsp;件
+			</div>
+		</div>
+	</div>
+</body>
+</html>

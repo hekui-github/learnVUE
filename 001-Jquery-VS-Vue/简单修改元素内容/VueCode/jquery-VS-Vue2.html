@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<style type="text/css">
+	#name {
+		color: red;
+	}
+	#libName {
+		color:red;
+	}
+	</style>
+
+
+
+</head>
+<body >
+<div id="mycontent">
+	<!-- {{}}两个大括号这种表示里面是一个表达式,它里面的值在Vue实例中的data中取 -->
+	<!-- 这里的{{name}} 显示的就是data中的name，name为美女所以显示为美女-->
+	<p>Hello, <span id = "name">{{name}}</span>!</p>
+	<p>欢迎学习 <span id = "libName">{{libName}}</span>.</p>
+	<!-- v-on:click 表示给元素绑定click事件，这个事件对应的是Vue实例中mothods中的modifyInfo-->
+	<!-- modifyInfo方法把美女改成了帅哥，页面中的{{name}}也就自动更新为了帅哥 -->
+	<button v-on:click="modifyInfo" >修改</button>
+</div>
+
+
+<script src="https://unpkg.com/vue/dist/vue.js"></script>
+<script type="text/javascript">
+//new 一个Vue对象，可以理解为固定写法，参数为一个json，json可以包含el、data、methods等键值对,
+//el表示Vue的作用范围，本例中只有id为mycontent这个元素内部这个Vue才生效,data表示数据，methods表示可以执行的各种方法
+	var vm = new Vue({
+		el: "#mycontent",
+		data:{
+			name:"美女",
+			libName:"Angular"
+		},
+		methods:{
+			modifyInfo:function(){
+				this.name = "帅哥";
+				this.libName = "Vue";
+			}
+		}
+		
+	})
+</script>
+
+</body>
+</html>

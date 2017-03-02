@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			color: #666;
+		}
+		ul{ list-style: none; }
+		#cart{
+			width: 938px;
+			margin: 20px auto;
+		}
+		#cart_header{ 
+			font-weight: bold;
+			font-size: 16px;
+			background-color: #f3f3f3;
+			height: 32px; 
+			line-height: 30px;
+			border: 1px solid #a7cbff;
+		 
+		
+		}
+		#cart_header ul{
+		
+		}
+		#cart_header li{
+			float: left;
+			text-align: center;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_header li.list_check{
+			width: 80px;
+		}
+		#cart_header li.list_good{
+			width: 320px;
+		}
+		#cart_header li.list_price{
+			width: 150px;
+		}
+		#cart_header li.list_count{
+			width: 110px;
+		}
+		#cart_header li.list_subTotal{
+			width: 170px;
+		}
+		#cart_header li.list_act{
+			width: 100px;
+		}
+		#cart_item{}
+		#cart_item .item_i{
+			text-align: center;
+			border-bottom: 1px solid #a7cbff;
+			border-left: 1px solid #a7cbff;
+			overflow: hidden;
+		}
+		#cart_item .checkbox{
+			/*display: inline-block;*/
+			float: left;
+			width: 80px;
+			height: 60px;
+			text-align: center;
+			padding-top: 40px;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .good{
+			/*display: inline-block;*/
+			float: left;
+			width: 320px;
+			height: 100px;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .good img{
+			width: 100px;
+			height: 80px;
+			margin: 10px 10px;
+			vertical-align:middle;
+		}
+		#cart_item .good span{
+			width: 200px;
+			text-align: left;
+			font-size: 12px;
+			display: inline-block;
+			vertical-align:middle;
+
+		}
+		#cart_item .price{
+			width: 150px;
+			height: 60px;
+			padding-top: 40px;
+			float: left;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .count{
+			padding: 40px 0 0 10px;
+			border-right: 1px solid #CADEFF;
+			float: left;
+			width: 100px;
+			height: 60px;
+		}
+		#cart_item .count .count_input{
+			width: 50px;
+			height: 15px;
+			float: left;
+			text-align: center;
+			padding: 4px 0;
+			border: 1px solid #aaa;
+		}
+		#cart_item .count .reduce,#cart_item .count .add{
+			display: inline-block;
+			width: 17px;
+			height: 23px;
+			float: left;
+			background-color: #e5e5e5;
+			border: 1px solid #e5e5e5;
+			cursor: pointer;
+		}
+		#cart_item .subTotal{
+			padding-top: 40px; 
+			float: left;
+			width: 170px;
+			height: 60px;
+			color: red;
+			font-weight: bold;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .act{
+			float: left;
+			width: 100px;
+			height: 60px;
+			padding-top: 40px;
+			border-right: 1px solid #CADEFF;
+			cursor: pointer;
+		}
+		#cart_footer{
+			width: 935px;
+			height: 48px;
+			background-color: #f3f3f3;
+			margin-top: 10px;
+			border: 1px solid #a7cbff;
+			line-height: 48px;
+			position: relative;
+
+		}
+		#cart_footer .checkAll{
+			display: inline-block;
+			margin:0 10px;
+		}
+		#deleteAll{
+			display: inline-block;
+			margin-left: 40px;
+			cursor: pointer;
+		}
+		#selected{
+			float: right;
+			margin-right: 140px;
+			cursor: pointer;
+		}
+		#cart_footer .total{
+			float: right;
+			margin-right: 40px;
+		}
+		#totalCount,#totalPrice{
+			font-weight: bold;
+			color: red;
+		}
+		#cart_footer .closing{
+			float: right;
+			display: block;
+			width: 100px;
+			border-left: 1px solid #c8c8c8; 
+			text-align: center;
+			color: #000;
+			font-weight: bold;	
+		}
+		
+	</style>
+	<script src="https://unpkg.com/jquery"></script>
+
+	<script type="text/javascript">
+
+	//返回每一行的数据
+	function getTotalCountAndPrice (item) {
+		var count_input = parseInt(item.find(".count_input").eq(0).val());
+		var price = parseFloat(parseFloat(item.find(".price").eq(0).text()).toFixed(2));
+		var totalPrice = parseFloat((count_input*price).toFixed(2));
+
+		var jsonData = {"count":count_input,"price":price,"totalPrice":totalPrice};
+		return jsonData;
+	}
+
+	//每一个商品的总价
+	function getSubTotal(item){
+		var listData = getTotalCountAndPrice(item);		
+		item.find('.subTotal').eq(0).html(listData.totalPrice);
+	}
+
+
+	//根据每一行的数据传入修改所有商品总价格和总件数
+	function updateTotal(item,count){
+		var listData = getTotalCountAndPrice(item);		
+
+		var listPrice = listData.price;
+
+
+		var totalPrice = parseFloat($("#totalPrice").eq(0).text());
+		var totalCount = parseInt($("#totalCount").eq(0).text());
+
+		$("#totalPrice").text((totalPrice + count * listPrice ).toFixed(2));
+		$("#totalCount").text((totalCount + count ));
+	}
+
+	//根据列表项数据填充列表项和总价总数量
+	function fillListWithData(jqueryListItem,listItemData){
+		//首次跟一行列表赋值(一个商品)
+		jqueryListItem.find('img').eq(0).attr('src', listItemData.pic);
+		jqueryListItem.find('span').eq(0).html(listItemData.name);
+		jqueryListItem.find('.price').eq(0).html(listItemData.price);
+		jqueryListItem.find('.count_input').eq(0).val(listItemData.num);
+		//计算一行的总价格
+		getSubTotal(jqueryListItem);
+
+
+		//减商品个数的事件
+		jqueryListItem.find('.reduce').click(function(event) {
+			//个数输入框，因为会取值赋值用到几次，所以提出来作变量
+			var count_inputOBJ =  $(this).parent().find('.count_input').eq(0);
+			var count_input = parseInt(count_inputOBJ.val());
+			//输入框的值为1就不允许再减个数了，输入框最小值为1
+			if (count_input == 1) {
+				return;
+			}
+			count_input -= 1;
+			count_inputOBJ.val(count_input);
+			//更新每一行的总价格
+			getSubTotal($(this).parent().parent());
+
+
+
+			var itemCheck = $(this).parent().parent().find(".checkOne").get(0);
+			if (itemCheck.checked) {
+				//如果这个商品勾选了应该更新整个总价格和总数量
+				updateTotal($(this).parent().parent(),-1);
+			}
+		});
+
+		//增加商品个数的事件,代码同减商品个数不注释
+		jqueryListItem.find('.add').click(function(event) {
+			
+			var count_inputOBJ =  $(this).parent().parent().find('.count_input').eq(0);
+			var count_input = parseInt(count_inputOBJ.val());
+			count_input += 1;
+			count_inputOBJ.val(count_input);
+			getSubTotal($(this).parent().parent());
+
+			var itemCheck = $(this).parent().parent().find(".checkOne").get(0);
+			if (itemCheck.checked) {
+				updateTotal($(this).parent().parent(),1);
+			}
+		});
+
+		//删除某个商品的事件,代码同加减商品个数不注释
+		jqueryListItem.find('.delete').click(function(event) {
+
+			var itemCheck = $(this).parent().parent().find(".checkOne").get(0);
+			if (itemCheck.checked) {
+				var count_inputOBJ =  $(this).parent().parent().find('.count_input').eq(0);
+				updateTotal($(this).parent().parent(),- parseInt(count_inputOBJ.val()));
+			}
+
+
+			$(this).parent().parent().remove();
+		});
+
+
+
+		//跟列表项的check-box加事件
+		jqueryListItem.find('.checkOne').click(function(event) {
+
+			var listData = getTotalCountAndPrice($(this).parent().parent());
+			if (this.checked) {
+				//加上勾选项数量和价格
+				updateTotal($(this).parent().parent(),listData.count);
+				//遍历看是否是全选
+				var checkList = $(".checkOne");
+				var checkAllList = $(".checkAll");
+
+				var allCheckTag = true ;
+				for (var i = 0; i < checkList.length; i++) {
+					var checkItem = checkList.get(i);
+					if (!checkItem.checked) {
+						allCheckTag = false;
+						break;
+					}
+				}
+				if (allCheckTag) {
+					for (var j = 0; j < checkAllList.length; j++) {
+						checkAllList.get(j).checked = true;
+					}
+				}
+				
+
+			}else {
+				//减去勾选项
+				updateTotal($(this).parent().parent(),-listData.count);
+				//去掉全选
+				var checkAllList = $(".checkAll");
+				for (var j = 0; j < checkAllList.length; j++) {
+					checkAllList.get(j).checked = false;
+				}
+
+			}
+		});
+
+		//初始化总价,每循环一个列表项就应该把总数总价格更新下
+		 updateTotal(jqueryListItem,listItemData.num);
+	}
+
+
+
+	
+	$(function(){
+		//这里模拟数据，实际中是ajax请求网络数据，并没有太大差异
+		var myListArr = [
+								{
+									name:"【三只松鼠_小贱拉面丸子85gx3】休闲零食膨化小吃干脆面串烧味",
+									pic:"https://gw.alicdn.com/bao/uploaded/i1/TB16tk_KpXXXXX7XVXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+									price:22.8,
+									num:2,
+
+								},
+								{
+									name:"【三只松鼠_炭烧腰果185gx2袋】坚果零食特产炒货干果腰果仁",
+									pic:"https://gw.alicdn.com/bao/uploaded/i2/TB1372RKXXXXXXnXVXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+									price:42,
+									num:1,
+
+								},
+								{
+									name:"【三只松鼠_皇族牌牛奶夹心饼240g】台湾进口休闲零食夹心饼干",
+									pic:"https://gw.alicdn.com/bao/uploaded/i3/TB1UK3uOVXXXXaiaXXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+									price:15.5,
+									num:3,
+
+								},
+								{
+									name:"【三只松鼠_碧根果210gx2袋】零食坚果山核桃长寿果干果奶油味",
+									pic:"https://gw.alicdn.com/bao/uploaded/i2/TB1eTzgJVXXXXcIXFXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+									price:18.9,
+									num:1,
+
+								}];
+		//每个列表项对应的html代码，实际情况中只要先把html写好然后拷贝去空格就好
+		var listItemCodeStr = '<div class="item_i"><div class="checkbox"><input type="checkbox" class="checkOne check" checked="checked"></div><div class="good"><img src=" 1.jpg"><span>xxxxxxx</span></div><div class="price">0</div><div class="count"><span class="reduce">-</span><input type="text" class="count_input" value="1"><span class="add">+</span></div><div class="subTotal">0</div><div class="act"><span class="delete">删除</span></div></div>';
+
+		//根据数据来添加每一项列表到dom上
+		for (var i = 0; i < myListArr.length; i++) {
+			//生成的列表项dom元素
+			var jqueryListItem = $(listItemCodeStr);
+			//对应列表项数据
+			var listItemData = myListArr[i];
+
+			//用数据填充dom列表项
+			fillListWithData(jqueryListItem,listItemData)
+
+			//把列表项添加到dom上
+			$("#cart_item").append(jqueryListItem);
+		}
+
+		//跟两个全选check-box加事件
+		$('.checkAll').click(function(event) {
+			var checkList = $(".checkOne");
+			var checkAllList = $(".checkAll");
+
+			//让另一个按钮也全选或者也不全选保持同步
+			for (var i = 0; i < checkAllList.length; i++) {
+				checkAllList.get(i).checked = this.checked;
+			}
+
+			for (var i = 0; i < checkList.length; i++) {
+				//如果当前项和全选项不一样则执行选中单行操作
+				if (checkList.get(i).checked != this.checked) {
+					checkList.get(i).click();
+				}
+			}
+		});
+
+		
+	});
+
+	</script>
+</head>
+<body>
+	<div id="cart">
+		<div id="cart_header">
+			<ul>
+				<li class="list_check">
+					<input type="checkbox" class="checkAll check" checked="checked"/>
+					<label>全选</label>
+				</li>
+				<li class="list_good">商品</li>
+				<li class="list_price">单价</li>
+				<li class="list_count">数量</li>
+				<li class="list_subTotal">小计</li>
+				<li class="list_act">操作</li>
+			</ul>
+		</div>
+		<div id="cart_item">
+			
+		</div>
+		<div id="cart_footer" class="">
+			<label><input type="checkbox" class="checkAll check" checked="checked">全选</label>
+			<span class="closing">结算</span>
+			<div class="total">
+				 合计：￥<span id="totalPrice">0</span>
+			</div>
+			<div id="selected">
+				已选商品&nbsp;<span id="totalCount">0</span>&nbsp;件
+			</div>
+		</div>
+	</div>
+</body>
+</html>
