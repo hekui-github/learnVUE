@@ -198,7 +198,6 @@
 		item.find('.subTotal').eq(0).html(listData.totalPrice);
 	}
 
-
 	//根据每一行的数据传入修改所有商品总价格和总件数
 	function updateTotal(item,count){
 		var listData = getTotalCountAndPrice(item);		
@@ -222,8 +221,6 @@
 		jqueryListItem.find('.count_input').eq(0).val(listItemData.num);
 		//计算一行的总价格
 		getSubTotal(jqueryListItem);
-
-
 		//减商品个数的事件
 		jqueryListItem.find('.reduce').click(function(event) {
 			//个数输入框，因为会取值赋值用到几次，所以提出来作变量
@@ -237,31 +234,24 @@
 			count_inputOBJ.val(count_input);
 			//更新每一行的总价格
 			getSubTotal($(this).parent().parent());
-
-
-
 			var itemCheck = $(this).parent().parent().find(".checkOne").get(0);
 			if (itemCheck.checked) {
 				//如果这个商品勾选了应该更新整个总价格和总数量
 				updateTotal($(this).parent().parent(),-1);
 			}
 		});
-
 		//增加商品个数的事件,代码同减商品个数不注释
 		jqueryListItem.find('.add').click(function(event) {
-			
 			var count_inputOBJ =  $(this).parent().parent().find('.count_input').eq(0);
 			var count_input = parseInt(count_inputOBJ.val());
 			count_input += 1;
 			count_inputOBJ.val(count_input);
 			getSubTotal($(this).parent().parent());
-
 			var itemCheck = $(this).parent().parent().find(".checkOne").get(0);
 			if (itemCheck.checked) {
 				updateTotal($(this).parent().parent(),1);
 			}
 		});
-
 		//删除某个商品的事件,代码同加减商品个数不注释
 		jqueryListItem.find('.delete').click(function(event) {
 
@@ -270,16 +260,10 @@
 				var count_inputOBJ =  $(this).parent().parent().find('.count_input').eq(0);
 				updateTotal($(this).parent().parent(),- parseInt(count_inputOBJ.val()));
 			}
-
-
 			$(this).parent().parent().remove();
 		});
-
-
-
 		//跟列表项的check-box加事件
 		jqueryListItem.find('.checkOne').click(function(event) {
-
 			var listData = getTotalCountAndPrice($(this).parent().parent());
 			if (this.checked) {
 				//加上勾选项数量和价格
@@ -301,8 +285,6 @@
 						checkAllList.get(j).checked = true;
 					}
 				}
-				
-
 			}else {
 				//减去勾选项
 				updateTotal($(this).parent().parent(),-listData.count);
@@ -314,45 +296,32 @@
 
 			}
 		});
-
 		//初始化总价,每循环一个列表项就应该把总数总价格更新下
 		 updateTotal(jqueryListItem,listItemData.num);
 	}
-
-
-
 	
 	$(function(){
 		//这里模拟数据，实际中是ajax请求网络数据，并没有太大差异
-		var myListArr = [
-								{
-									name:"【三只松鼠_小贱拉面丸子85gx3】休闲零食膨化小吃干脆面串烧味",
-									pic:"https://gw.alicdn.com/bao/uploaded/i1/TB16tk_KpXXXXX7XVXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
-									price:22.8,
-									num:2,
-
-								},
-								{
-									name:"【三只松鼠_炭烧腰果185gx2袋】坚果零食特产炒货干果腰果仁",
-									pic:"https://gw.alicdn.com/bao/uploaded/i2/TB1372RKXXXXXXnXVXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
-									price:42,
-									num:1,
-
-								},
-								{
-									name:"【三只松鼠_皇族牌牛奶夹心饼240g】台湾进口休闲零食夹心饼干",
-									pic:"https://gw.alicdn.com/bao/uploaded/i3/TB1UK3uOVXXXXaiaXXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
-									price:15.5,
-									num:3,
-
-								},
-								{
-									name:"【三只松鼠_碧根果210gx2袋】零食坚果山核桃长寿果干果奶油味",
-									pic:"https://gw.alicdn.com/bao/uploaded/i2/TB1eTzgJVXXXXcIXFXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
-									price:18.9,
-									num:1,
-
-								}];
+		var myListArr = [{
+							name:"【三只松鼠_小贱拉面丸子85gx3】休闲零食膨化小吃干脆面串烧味",
+							pic:"https://gw.alicdn.com/bao/uploaded/i1/TB16tk_KpXXXXX7XVXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+							price:22.8,
+							num:2,},
+						{
+							name:"【三只松鼠_炭烧腰果185gx2袋】坚果零食特产炒货干果腰果仁",
+							pic:"https://gw.alicdn.com/bao/uploaded/i2/TB1372RKXXXXXXnXVXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+							price:42,
+							num:1,},
+						{
+							name:"【三只松鼠_皇族牌牛奶夹心饼240g】台湾进口休闲零食夹心饼干",
+							pic:"https://gw.alicdn.com/bao/uploaded/i3/TB1UK3uOVXXXXaiaXXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+							price:15.5,
+							num:3,},
+						{
+							name:"【三只松鼠_碧根果210gx2袋】零食坚果山核桃长寿果干果奶油味",
+							pic:"https://gw.alicdn.com/bao/uploaded/i2/TB1eTzgJVXXXXcIXFXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+							price:18.9,
+							num:1,}];
 		//每个列表项对应的html代码，实际情况中只要先把html写好然后拷贝去空格就好
 		var listItemCodeStr = '<div class="item_i"><div class="checkbox"><input type="checkbox" class="checkOne check" checked="checked"></div><div class="good"><img src=" 1.jpg"><span>xxxxxxx</span></div><div class="price">0</div><div class="count"><span class="reduce">-</span><input type="text" class="count_input" value="1"><span class="add">+</span></div><div class="subTotal">0</div><div class="act"><span class="delete">删除</span></div></div>';
 
@@ -388,7 +357,6 @@
 			}
 		});
 
-		
 	});
 
 	</script>
