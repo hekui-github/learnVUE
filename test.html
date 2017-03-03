@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+</head>
+<body>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <div id="demo">
+      <button @click="change">change</button>
+      <pre>{{ $data }}</pre>
+    </div>
+    <script>
+    new Vue({
+      el: '#demo',
+      data: {
+        things: [{foo:1}, {foo:2}]
+      },
+      watch: {
+        things: {
+          handler: function (val, oldVal) {
+          	console.log(val[0].foo);
+
+          	console.log(oldVal[0].foo);
+          	console.log(val === oldVal);
+            // alert(val +'a thing changed' + oldVal)
+          },
+          deep: true
+        }
+      },
+      methods: {
+        change: function () {
+          this.things[0].foo = 5
+        }
+      }
+    })
+    </script>
+
+</body>
+</html>

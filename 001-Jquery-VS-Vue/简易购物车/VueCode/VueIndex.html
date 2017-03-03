@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>index</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+			color: #666;
+		}
+		ul{ list-style: none; }
+		#cart{
+			width: 938px;
+			margin: 20px auto;
+		}
+		#cart_header{ 
+			font-weight: bold;
+			font-size: 16px;
+			background-color: #f3f3f3;
+			height: 32px; 
+			line-height: 30px;
+			border: 1px solid #a7cbff;
+		 
+		
+		}
+		#cart_header ul{
+		
+		}
+		#cart_header li{
+			float: left;
+			text-align: center;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_header li.list_check{
+			width: 80px;
+		}
+		#cart_header li.list_good{
+			width: 320px;
+		}
+		#cart_header li.list_price{
+			width: 150px;
+		}
+		#cart_header li.list_count{
+			width: 110px;
+		}
+		#cart_header li.list_subTotal{
+			width: 170px;
+		}
+		#cart_header li.list_act{
+			width: 100px;
+		}
+		#cart_item{}
+		#cart_item .item_i{
+			text-align: center;
+			border-bottom: 1px solid #a7cbff;
+			border-left: 1px solid #a7cbff;
+			overflow: hidden;
+		}
+		#cart_item .checkbox{
+			/*display: inline-block;*/
+			float: left;
+			width: 80px;
+			height: 60px;
+			text-align: center;
+			padding-top: 40px;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .good{
+			float: left;
+			width: 320px;
+			height: 100px;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .good img{
+			width: 100px;
+			height: 80px;
+			margin: 10px 10px;
+			vertical-align:middle;
+			float: left;
+		}
+		#cart_item .good span{
+			width: 200px;
+			text-align: left;
+			font-size: 12px;
+			display: inline-block;
+			vertical-align:middle;
+			float: left;
+
+		}
+		#cart_item .price{
+			width: 150px;
+			height: 60px;
+			padding-top: 40px;
+			float: left;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .count{
+			padding: 40px 0 0 10px;
+			border-right: 1px solid #CADEFF;
+			float: left;
+			width: 100px;
+			height: 60px;
+		}
+		#cart_item .count .count_input{
+			width: 50px;
+			height: 15px;
+			float: left;
+			text-align: center;
+			padding: 4px 0;
+			border: 1px solid #aaa;
+		}
+		#cart_item .count .reduce,#cart_item .count .add{
+			display: inline-block;
+			width: 17px;
+			height: 23px;
+			float: left;
+			background-color: #e5e5e5;
+			border: 1px solid #e5e5e5;
+			cursor: pointer;
+		}
+		#cart_item .subTotal{
+			padding-top: 40px; 
+			float: left;
+			width: 170px;
+			height: 60px;
+			color: red;
+			font-weight: bold;
+			border-right: 1px solid #CADEFF;
+		}
+		#cart_item .act{
+			float: left;
+			width: 100px;
+			height: 60px;
+			padding-top: 40px;
+			border-right: 1px solid #CADEFF;
+			cursor: pointer;
+		}
+		#cart_footer{
+			width: 935px;
+			height: 48px;
+			background-color: #f3f3f3;
+			margin-top: 10px;
+			border: 1px solid #a7cbff;
+			line-height: 48px;
+			position: relative;
+
+		}
+		#cart_footer .checkAll{
+			display: inline-block;
+			margin:0 10px;
+		}
+		#deleteAll{
+			display: inline-block;
+			margin-left: 40px;
+			cursor: pointer;
+		}
+		#selected{
+			float: right;
+			margin-right: 140px;
+			cursor: pointer;
+		}
+		#cart_footer .total{
+			float: right;
+			margin-right: 40px;
+		}
+		#totalCount,#totalPrice{
+			font-weight: bold;
+			color: red;
+		}
+		#cart_footer .closing{
+			float: right;
+			display: block;
+			width: 100px;
+			border-left: 1px solid #c8c8c8; 
+			text-align: center;
+			color: #000;
+			font-weight: bold;	
+		}
+		
+	</style>
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+
+</head>
+<body>
+	<div id="cart">
+		<div id="cart_header">
+			<ul>
+				<li class="list_check">
+
+				<!-- v-model 绑定Vue中的allCheck数据,v-model 是双向绑定 -->
+				<!-- v-on:click 为checkbox绑定了一个事件allCheckMethod -->
+					<input type="checkbox" class="checkAll check" v-model = "allCheck"  v-on:click = "allCheckMethod"/>
+					<label>全选</label>
+				</li>
+				<li class="list_good">商品</li>
+				<li class="list_price">单价</li>
+				<li class="list_count">数量</li>
+				<li class="list_subTotal">小计</li>
+				<li class="list_act">操作</li>
+			</ul>
+		</div>
+		<div id="cart_item">
+			<!-- v-for 可以根据Vue中myListArr数组的长度来生成div,其中item和index分别是每一项的值和索引 -->
+			 <div class="item_i" v-for="(item,index) in myListArr">
+			    <div class="checkbox"  >
+			    	<!-- v-on:click绑定了check点击方法,传入了index这个参数，它是数组当前的索引，在外层div的v-for中定义过 -->
+			        <input type="checkbox" class="checkOne check" v-model="item.isChecked"  v-on:click="check(index)"/></div>
+			    <div class="good">
+			    	<!-- 绑定了图片的地址和商品的名称,:src 是v-bind:src的简写,只要是html元素的属性值都可以用v-bind指令 -->
+			        <img :src ="item.pic"  />
+			        <span>{{item.name}}</span></div>
+			    <div class="price">{{item.price}}</div>
+			    <div class="count">
+			    	<!-- @click 是v-on:click的简写,这里特意展示一下 -->
+			        <span class="reduce" @click="reduce(index)">-</span>
+			        <input type="text" class="count_input" v-model="item.num" />
+			        <span class="add" v-on:click="add(index)">+</span></div>
+			    <!-- 这里每一行商品总价是价格*数量，四舍五入保留两位小数 -->
+			    <div class="subTotal">{{(item.price* item.num).toFixed(2)}}</div>
+			    <div class="act">
+			        <span class="delete" @click= "remove(index)">删除</span></div>
+			</div>
+		</div>
+		<div id="cart_footer" class="">
+			<label><input type="checkbox" class="checkAll check" v-model = "allCheck" v-on:click = "allCheckMethod">全选</label>
+			<span class="closing">结算</span>
+			<div class="total">
+				 合计：￥<span id="totalPrice">{{totalPrice}}</span>
+			</div>
+			<div id="selected">
+				已选商品&nbsp;<span id="totalCount">{{totalCount}}</span>&nbsp;件
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+
+	var vm = new Vue({
+		el: "#cart",
+		data:{
+			 myListArr : [
+								{
+									name:"【三只松鼠_小贱拉面丸子85gx3】休闲零食膨化小吃干脆面串烧味",
+									pic:"https://gw.alicdn.com/bao/uploaded/i1/TB16tk_KpXXXXX7XVXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+									price:22.8,
+									num:2,
+									isChecked:true,
+
+								},
+								{
+									name:"【三只松鼠_炭烧腰果185gx2袋】坚果零食特产炒货干果腰果仁",
+									pic:"https://gw.alicdn.com/bao/uploaded/i2/TB1372RKXXXXXXnXVXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+									price:42,
+									num:1,
+									isChecked:true,
+								},
+								{
+									name:"【三只松鼠_皇族牌牛奶夹心饼240g】台湾进口休闲零食夹心饼干",
+									pic:"https://gw.alicdn.com/bao/uploaded/i3/TB1UK3uOVXXXXaiaXXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+									price:15.5,
+									num:3,
+									isChecked:true,
+
+								},
+								{
+									name:"【三只松鼠_碧根果210gx2袋】零食坚果山核桃长寿果干果奶油味",
+									pic:"https://gw.alicdn.com/bao/uploaded/i2/TB1eTzgJVXXXXcIXFXXXXXXXXXX_!!0-item_pic.jpg_200x200q50s150.jpg_.webp",
+									price:18.9,
+									num:1,
+									isChecked:true,
+
+								}],
+			 //这三个属性分别绑定的是所有商品数量、总价格、时候全选
+			 totalCount:0,
+			 totalPrice:0,
+			 allCheck:true,
+		},
+		mounted: function () {
+            //这里是vue初始化完成后执行的函数,注意vue1.x版本是ready方法,如无特别说明本人使用的都是Vue2.x
+            this.calTotal();
+        },
+		methods:{
+			//每一行增加商品的方法,根据索引值修改这一项对应的数据源的值就可以了，Vue会帮你自动更新dom中相关的值
+			add:function(index){
+				var item = this.myListArr[index];
+				item.num +=1;
+				//计算总价和总件数
+				this.calTotal();
+			},
+			//减商品
+			reduce:function(index){
+				var item = this.myListArr[index];
+				//如果商品只有1件就不允许再减了，只能删除
+				if (item.num == 1) {
+					return;
+				}
+				item.num -= 1;
+				this.calTotal();
+			},
+			//删除本行商品
+			remove:function(index) {
+				//splice 是array的批量删除方法
+				this.myListArr.splice(index,1);
+				this.calTotal();
+			},
+			//单行的checkbox选中
+			check:function(index){
+				var listItem = this.myListArr[index];
+				this.calTotal();
+				if (!listItem.isChecked) {
+					//如果没有选中状态肯定是没有全选
+					this.allCheck = false;
+				}else {
+					//如果是选中状态先把全选选中，然后再每一项遍历，如果有一项没有选中就改为非全选状态
+					this.allCheck = true;
+
+					for (var i = 0; i < this.myListArr.length; i++) {
+						var listItem1 = this.myListArr[i];
+						if (!listItem1.isChecked) {
+							this.allCheck = false;
+						}
+					}
+				}
+			},
+			//全选checkbox事件
+			allCheckMethod:function(){
+				//全选只需要所有的列表都跟全选状态是同一个状态就可以
+				for (var i = 0; i < this.myListArr.length; i++) {
+					var listItem = this.myListArr[i];
+					listItem.isChecked = this.allCheck;
+				}
+				this.calTotal();
+			},
+			//计算总数
+			calTotal:function(){
+				//计算总件数
+				this.calTotalCount();
+				//计算总价格
+				this.calTotalPrice();
+			},
+			//计算总件数
+			calTotalCount: function () {
+		    	var count = 0;
+		    	for (var i = 0; i < this.myListArr.length; i++) {
+		    		var listItem = this.myListArr[i];
+		    		if (listItem.isChecked) {
+		    			count += listItem.num;
+		    		}
+		    	}
+		      	this.totalCount = count;
+		    },
+		    //计算总价格
+		    calTotalPrice: function () {
+		    	var price = 0.0;
+		    	for (var i = 0; i < this.myListArr.length; i++) {
+		    		var listItem = this.myListArr[i];
+		    		if (listItem.isChecked) {
+		    			 price = price + listItem.num * listItem.price;
+		    		}
+		    	}
+		    	this.totalPrice = price;
+		    }
+		},
+	});
+	</script>
+</body>
+</html>
