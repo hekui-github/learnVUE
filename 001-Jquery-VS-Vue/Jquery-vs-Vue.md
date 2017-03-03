@@ -1,4 +1,4 @@
-[本文代码下载地址](https://github.com/hekui-github/learnVUE/tree/master/001-Jquery-VS-Vue)
+[本文博客地址](http://www.jianshu.com/p/cead795f9f29)
 
 ##概述
 #####前端开发近况
