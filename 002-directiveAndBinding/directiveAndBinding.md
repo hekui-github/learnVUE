@@ -1,5 +1,5 @@
 ##代码部分请下载本文代码阅读，代码均能正常运行并有详细的注释。
-[本文代码下载地址](https://github.com/hekui-github/learnVUE/tree/master/001-Jquery-VS-Vue)
+[本文代码下载地址](https://github.com/hekui-github/learnVUE/tree/master/002-directiveAndBinding)
 
 ##概述
 无需置疑，Vue之所以能如此之火，主要受益于它是一个MVVM框架和它易学的文档，几乎所有觉得学习Vue有难度的开发者都是觉得组件脚手架等等不太好理解，但是这些都不是Vue的核心，Vue的核心表现在最易学的Vue指令和绑定，学好Vue指令和绑定基本就学好Vue的一大半了，把基础核心的几个知识点说完会做几个完整的demo。
